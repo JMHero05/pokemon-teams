@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `
     div.append(ul)
     displayPokemons(ul, trainer.pokemons)
-    console.log(trainer.pokemons)
     main.append(div)
   }
 
@@ -45,9 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
     li.innerHTML = `
     ${pokemon.nickname} (${pokemon.species}) <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
     `
-    console.log(li)
     ul.append(li)
   }
+
+  main.addEventListener('click', (e) => {
+    if (e.target.dataset.trainerId) {
+      const trainer = e.target.parentElement
+      const ul = trainer.querySelector('ul')
+      if (trainer.querySelectorAll('li').length < 6) {
+        fetch(POKEMONS_URL, {
+            method: 'POST',
+
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+
+            body: JSON.stringify({
+              "trainer_id": trainer.dataset.id
+            })
+          })
+          .then(response => response.json())
+          .then(pokemon => displayPokemon(ul, pokemon))
+          .catch(error => console.error(error))
+      }
+    }
+  })
 
   getTrainers()
 })
