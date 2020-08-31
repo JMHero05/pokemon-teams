@@ -42,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const displayPokemon = (ul, pokemon) => {
     const li = document.createElement('li')
     li.innerHTML = `
-    ${pokemon.nickname} (${pokemon.species}) <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
+    ${pokemon.nickname} (${pokemon.species}) 
+    <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
     `
     ul.append(li)
   }
@@ -68,6 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(pokemon => displayPokemon(ul, pokemon))
           .catch(error => console.error(error))
       }
+    }
+
+    if (e.target.matches('.release')) {
+      const pokemon = e.target.parentElement
+      const pokemonId = e.target.dataset.pokemonId
+      fetch(POKEMONS_URL + "/" + pokemonId, {
+        method: "DELETE",
+      }).then(pokemon.remove())
     }
   })
 
